@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 110px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding-top: 100px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    
+    /* THE FIX: We use a relative path. 
+       If your CSS file is in the 'Society_Guide' folder, this looks into 'Pictures' */
+    background: linear-gradient(
+        rgba(10, 25, 47, 0.88), 
+        rgba(2, 12, 27, 0.96)
+    ), 
+    url('Pictures/4884451.jpg') no-repeat;
+
+    background-size: cover; 
+    background-attachment: fixed; 
+    background-position: center;
+    background-color: #020c1b; /* Fallback color if image fails */
+}
+
+/* Floating Navigation Bar */
+header {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1100px;
+    background: rgba(10, 25, 47, 0.8);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    border-radius: 16px;
+    padding: 15px 0;
+    z-index: 1000;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.lang-switcher {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.lang-switcher button {
+    background: transparent;
+    color: #64ffda;
+    border: 1px solid #64ffda;
+    padding: 4px 12px;
+    margin: 0 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.lang-switcher button:hover {
+    background: rgba(100, 255, 218, 0.15);
+    box-shadow: 0 0 15px rgba(100, 255, 218, 0.4);
+}
+
+#main-menu {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#main-menu li { margin: 0 18px; }
+#main-menu a {
+    color: #f8fafc;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: 0.3s;
+}
+
+#main-menu a:hover {
+    color: #64ffda;
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+}
+
+/* Main Content Area */
+main {
+    max-width: 950px;
+    margin: 140px auto 60px;
+    padding: 0 25px;
+}
+
+/* Glass Section Panels */
+section {
+    background: rgba(17, 34, 64, 0.6);
+    backdrop-filter: blur(5px);
+    border-radius: 20px;
+    padding: 45px;
+    margin-bottom: 45px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+section:hover {
+    border-color: rgba(100, 255, 218, 0.4);
+    transform: translateY(-8px);
+    background: rgba(17, 34, 64, 0.8);
+}
+
+h1, h2 {
+    color: #ffffff;
+    font-size: 2rem;
+    margin-top: 0;
+    letter-spacing: -0.5px;
+}
+
+h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: #64ffda;
+    margin-top: 12px;
+    border-radius: 2px;
+}
+
+/* Cyber Table Design */
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.info-table th {
+    background: rgba(100, 255, 218, 0.1);
+    color: #64ffda;
+    padding: 18px;
+    text-align: left;
+    font-size: 0.9rem;
+    border-bottom: 2px solid #64ffda;
+}
+
+.info-table td {
+    padding: 15px 18px;
+    background: rgba(2, 12, 27, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-table tr:hover td {
+    background: rgba(100, 255, 218, 0.05);
+    color: #fff;
+}
+
+/* Interactive Contact Card */
+.contact-card {
+    background: linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(10, 25, 47, 0.9) 100%);
+    padding: 50px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid #64ffda;
+    box-shadow: 0 0 20px rgba(100, 255, 218, 0.1);
+}
+
+.contact-card a {
+    color: #64ffda;
+    font-size: 1.5rem;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.contact-card a:hover {
+    text-shadow: 0 0 15px #64ffda;
+}
+
+/* Images */
+.main-img {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+footer {
+    text-align: center;
+    padding: 50px;
+    color: #495670;
+    font-size: 0.85rem;
+}
+
+/* Search Input Styling */
+#siteSearch {
+    background: rgba(2, 12, 27, 0.8);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: #64ffda;
+    width: 250px;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+#siteSearch:focus {
+    width: 320px;
+    border-color: #64ffda;
+    outline: none;
+}

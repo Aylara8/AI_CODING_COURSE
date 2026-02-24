@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 11: APIs in Web Apps</title>
+    <style>
+        /* --- CSS Variables (Shared System) --- */
+        :root {
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
+            
+            --bg-color: #000000;
+            --card-bg: #1c1c1e;
+            
+            /* Standard Accents */
+            --accent: #0a84ff;         /* Blue */
+            --accent-purple: #bf5af2;  /* Purple */
+            --accent-green: #30d158;   /* Success */
+            --accent-red: #ff453a;     /* Error/Important */
+            --accent-gold: #ffd60a;    /* Checkpoint/Warning */
+            
+            /* Session Specific Colors */
+            --api-cyan: #00e5ff;       /* API/Live Data */
+            --py-blue: #3776ab;        /* Python */
+            
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
+        }
+
+        /* --- Base Setup --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            overflow: hidden;
+        }
+
+        /* --- Snap Container --- */
+        .presentation-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10vw;
+            border-bottom: 1px solid #1a1a1a;
+            position: relative;
+        }
+
+        /* --- Typography --- */
+        .content-wrapper {
+            max-width: 1200px;
+            width: 100%;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+            background: linear-gradient(120deg, #fff, #86868b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 { font-size: 3rem; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+        h3 { font-size: 1.5rem; color: var(--text-main); margin-bottom: 0.5rem; }
+
+        p {
+            font-size: 1.6rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            max-width: 55ch;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(0, 229, 255, 0.15); /* API Cyan Tint */
+            color: var(--api-cyan);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Components --- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s;
+        }
+
+        /* --- Code Styling --- */
+        pre.code-block {
+            background: #111;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            color: #d4d4d4;
+            border: 1px solid #333;
+            overflow-x: auto;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .kwd { color: #c678dd; } 
+        .str { color: #98c379; } 
+        .func { color: #61afef; } 
+        .dec { color: var(--accent-green); } 
+        .comment { color: #5c6370; font-style: italic; }
+
+        /* Compare Box (CLI vs Flask) */
+        .compare-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .compare-header {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        /* --- Prompt Box --- */
+        .prompt-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--api-cyan);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 0 12px 12px 0;
+        }
+        .prompt-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--api-cyan);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .prompt-text {
+            font-family: var(--font-main);
+            font-size: 1.3rem;
+            color: #fff;
+            font-style: italic;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .scroll-hint { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 0.9rem; color: var(--text-muted); opacity: 0.5; }
+        
+    </style>
+</head>
+<body>
+
+<div class="presentation-container">
+
+    <!-- SLIDE 1: Title -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag">Session 11 • Phase 2</span>
+            <h1>Making It Real:<br>APIs in Web Apps</h1>
+            <p>Injecting live data from the internet directly into your full-stack applications.</p>
+            <div class="scroll-hint">Scroll to begin ↓</div>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: CLI vs Flask -->
+    <section>
+        <div class="content-wrapper">
+            <h2>Context Shift</h2>
+            <p>You already know how to fetch an API. Now we just change where the data goes.</p>
+
+            <div class="compare-container">
+                <!-- CLI Side -->
+                <div class="card" style="padding: 1.5rem;">
+                    <div class="compare-header" style="color: var(--text-muted);">Terminal (Session 5)</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--text-muted);">Outputs to the console.</p>
+                    <pre class="code-block" style="border: none; padding: 0;">
+response = requests.get(url)
+data = response.json()
+
+<span class="func">print</span>(data) <span class="comment"># To terminal</span></pre>
+                </div>
+
+                <!-- Flask Side -->
+                <div class="card" style="padding: 1.5rem; border-color: var(--api-cyan);">
+                    <div class="compare-header" style="color: var(--api-cyan);">Web App (Today)</div>
+                    <p style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--text-muted);">Outputs to a Jinja HTML template.</p>
+                    <pre class="code-block" style="border: none; padding: 0;">
+<span class="dec">@app.route('/weather')</span>
+<span class="kwd">def</span> <span class="func">weather</span>():
+    response = requests.get(url)
+    data = response.json()
+    
+    <span class="comment"># Pass directly to HTML</span>
+    <span class="kwd">return</span> render_template(
+        <span class="str">'page.html'</span>, 
+        weather=data
+    )</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: The Data Merge -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag" style="background: rgba(191, 90, 242, 0.15); color: var(--accent-purple);">The Pattern</span>
+            <h2>The Full-Stack Power Move</h2>
+            <p>The magic happens when you combine <strong>Your Data</strong> with <strong>Live Data</strong>.</p>
+
+            <div class="grid-3">
+                <div class="card" style="border-top: 4px solid var(--accent);">
+                    <h3>1. Load Yours</h3>
+                    <p style="font-size: 1rem; color: var(--text-muted); margin-top: 1rem;">Load the user's saved list of favorite cities from your JSON file.</p>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--api-cyan);">
+                    <h3>2. Fetch Live</h3>
+                    <p style="font-size: 1rem; color: var(--text-muted); margin-top: 1rem;">Loop through those cities and hit the OpenWeather API for each one.</p>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--accent-purple);">
+                    <h3>3. Combine</h3>
+                    <p style="font-size: 1rem; color: var(--text-muted); margin-top: 1rem;">Merge the data into one list and send it to your Jinja template to render.</p>
+                </div>
+            </div>
+
+            <div class="prompt-box">
+                <span class="prompt-label" style="color: var(--accent-purple);">Combination Prompt</span>
+                <p class="prompt-text">"I have a Flask app with a list of saved movie titles. Show me how to fetch their movie posters from the OMDB API and display them in my template."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: Error Handling -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag" style="background: rgba(255, 69, 58, 0.15); color: var(--accent-red);">Robustness</span>
+            <h2>Expect Failure</h2>
+            <p>If the API goes down, your app should NOT crash. Handle it gracefully.</p>
+
+            <pre class="code-block" style="margin-top: 2rem;">
+<span class="kwd">try</span>:
+    <span class="comment"># 1. Use a timeout! Don't let your app hang forever.</span>
+    response = requests.get(url, timeout=<span class="num">5</span>)
+    
+    <span class="comment"># 2. Check the status code.</span>
+    <span class="kwd">if</span> response.status_code == <span class="num">200</span>:
+        data = response.json()
+        <span class="kwd">return</span> render_template(<span class="str">'page.html'</span>, api_data=data)
+    <span class="kwd">else</span>:
+        flash(<span class="str">'API Service is currently unavailable.'</span>, <span class="str">'error'</span>)
+
+<span class="kwd">except</span> Exception <span class="kwd">as</span> e:
+    <span class="func">print</span>(f<span class="str">"Error: {e}"</span>) <span class="comment"># Log to terminal for you</span>
+    flash(<span class="str">'Could not connect to the server.'</span>, <span class="str">'error'</span>)
+
+<span class="comment"># 3. Fallback: Load page anyway without the API data.</span>
+<span class="kwd">return</span> render_template(<span class="str">'page.html'</span>, api_data=<span class="kwd">None</span>)</pre>
+        </div>
+    </section>
+
+    <!-- SLIDE 5: API Ideas Brainstorm -->
+    <section>
+        <div class="content-wrapper">
+            <h2>Enhance Your Project</h2>
+            <p>What API could take your Checkpoint 2 project to the next level?</p>
+
+            <div class="grid-3" style="margin-top: 2rem;">
+                <div class="card">
+                    <h3 style="color: var(--api-cyan);">📚 Books / Media</h3>
+                    <ul style="color: var(--text-muted); margin-left: 1.2rem; margin-top: 1rem; font-size: 1rem; line-height: 1.8;">
+                        <li><strong>Open Library:</strong> Cover images</li>
+                        <li><strong>OMDB:</strong> Movie ratings</li>
+                        <li><strong>NYT:</strong> Book reviews</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--api-cyan);">🏋️ Fitness / Health</h3>
+                    <ul style="color: var(--text-muted); margin-left: 1.2rem; margin-top: 1rem; font-size: 1rem; line-height: 1.8;">
+                        <li><strong>Spoonacular:</strong> Nutrition info</li>
+                        <li><strong>Quotable:</strong> Motivation</li>
+                        <li><strong>Wger:</strong> Exercise images</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--api-cyan);">📅 Planners / Travel</h3>
+                    <ul style="color: var(--text-muted); margin-left: 1.2rem; margin-top: 1rem; font-size: 1rem; line-height: 1.8;">
+                        <li><strong>OpenWeather:</strong> Forecasts</li>
+                        <li><strong>REST Countries:</strong> Info</li>
+                        <li><strong>Wikipedia:</strong> Summaries</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 6: Triage & Work Session -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag">Checkpoint 2</span>
+            <h2>Self-Triage Work Session</h2>
+            <p>Where are you at? Pick your priority for the next hour.</p>
+
+            <div class="grid-3">
+                <div class="card" style="border-top: 4px solid var(--accent-red);">
+                    <h3 style="color: var(--accent-red);">🔴 Behind</h3>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">CRUD is broken or incomplete.</p>
+                    <hr style="border: 0; border-top: 1px solid #333; margin: 1rem 0;">
+                    <ul style="font-size: 0.9rem; color: #ccc; margin-left: 1.2rem; line-height: 1.6;">
+                        <li>Skip APIs entirely.</li>
+                        <li>Focus on getting Add/Delete working.</li>
+                        <li>Ask for teacher intervention NOW.</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--accent-gold);">
+                    <h3 style="color: var(--accent-gold);">🟡 On Track</h3>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">CRUD works, but needs polish.</p>
+                    <hr style="border: 0; border-top: 1px solid #333; margin: 1rem 0;">
+                    <ul style="font-size: 0.9rem; color: #ccc; margin-left: 1.2rem; line-height: 1.6;">
+                        <li>Add Basic Validation.</li>
+                        <li>Improve CSS styling.</li>
+                        <li>Add one simple API (like a quote).</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--accent-green);">
+                    <h3 style="color: var(--accent-green);">🟢 Ahead</h3>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">App is fully functional and styled.</p>
+                    <hr style="border: 0; border-top: 1px solid #333; margin: 1rem 0;">
+                    <ul style="font-size: 0.9rem; color: #ccc; margin-left: 1.2rem; line-height: 1.6;">
+                        <li>Integrate complex live data.</li>
+                        <li>Add JS features (smooth delete).</li>
+                        <li>Help a Red/Yellow classmate.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: Presentations -->
+    <section>
+        <div class="content-wrapper">
+            <h2>Next Session's: Presentations</h2>
+            <p>You have 2 minutes to show us what you've built.</p>
+
+            <div class="card" style="margin-top: 2rem;">
+                <h3>The Presentation Flow</h3>
+                <div style="display: grid; grid-template-columns: auto 1fr; gap: 1rem; margin-top: 1.5rem; font-size: 1.1rem; color: var(--text-muted);">
+                    <div style="color: var(--text-main); font-weight: bold;">1. Intro (20s)</div>
+                    <div>What is it and why did you build it?</div>
+                    
+                    <div style="color: var(--text-main); font-weight: bold;">2. Live Demo (1m)</div>
+                    <div>Add an item, edit it, show off your features. Have sample data ready!</div>
+                    
+                    <div style="color: var(--text-main); font-weight: bold;">3. Tech Highlights (30s)</div>
+                    <div>Show us one interesting piece of code or an API integration.</div>
+                    
+                    <div style="color: var(--text-main); font-weight: bold;">4. Future (10s)</div>
+                    <div>What would you add if you had another week?</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 8: The Final Checklist -->
+    <section>
+        <div class="content-wrapper">
+            <h2>The Final Checklist</h2>
+            <p>Before you submit, verify the four pillars.</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3 style="color: var(--accent-green);">⚙️ Functionality</h3>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: var(--text-muted); font-size: 1rem;">
+                        <li>All CRUD operations work.</li>
+                        <li>Data saves to a file correctly.</li>
+                        <li>Form validation prevents bad data.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--accent);">🎨 User Experience</h3>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: var(--text-muted); font-size: 1rem;">
+                        <li>Clean, professional CSS styling.</li>
+                        <li>Flash messages show success/errors.</li>
+                        <li>Intuitive navigation.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--accent-purple);">💻 Code Quality</h3>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: var(--text-muted); font-size: 1rem;">
+                        <li>Organized templates and static folders.</li>
+                        <li>Template inheritance (base.html) used.</li>
+                        <li>No duplicate code.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="color: var(--accent-gold);">🚀 Technical Features</h3>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem; color: var(--text-muted); font-size: 1rem;">
+                        <li>External API integration (optional/stretch).</li>
+                        <li>JavaScript enhancements.</li>
+                        <li>A solid README.md file.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 9: Wrapping Up Phase 2 -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag" style="background: rgba(255, 214, 10, 0.15); color: var(--accent-gold);">Phase 2 Finale</span>
+            <h1 style="font-size: 4rem; background: none; -webkit-text-fill-color: var(--text-main);">Prepare to Launch.</h1>
+            <p style="font-size: 1.8rem; margin-top: 1rem;">Now: Final Polish.<br>Next Session: We celebrate.</p>
+            
+            <div class="prompt-box" style="margin-top: 3rem; border-color: var(--text-muted);">
+                <span class="prompt-label" style="color: var(--text-muted);">Emergency Prompt</span>
+                <p class="prompt-text" style="color: #ccc;">"I'm presenting tomorrow and my code just broke. Here is the error message and my Flask route. Help me isolate the bug."</p>
+            </div>
+            <p style="margin-top: 1.5rem; font-size: 1rem; color: var(--text-muted); text-align: center;">Breathe. Isolate the problem. Revert if necessary.</p>
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>

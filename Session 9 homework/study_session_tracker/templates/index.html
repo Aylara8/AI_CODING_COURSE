@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyTrack | Professional Session Logger</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Study Session Tracker</h1>
+        </header>
+        
+        <section class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Study Time</h3>
+                <p><span id="total-time">0</span> mins</p>
+            </div>
+            <div class="stat-card">
+                <h3>Sessions Total</h3>
+                <p id="sessions-count">0</p>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <form action="/add" method="POST" id="study-form">
+                <input type="text" name="subject" id="subject" placeholder="Subject (e.g. Math)" required>
+                <input type="number" name="duration" id="duration" placeholder="Minutes" required min="1">
+                <input type="date" name="date" id="date" required>
+                <button type="submit" class="btn-primary">Add Session</button>
+            </form>
+            
+            <div class="timer-container">
+                <span id="timer-display">00:00</span>
+                <button type="button" id="start-stop-btn" onclick="toggleTimer()">Start Timer</button>
+            </div>
+        </section>
+
+        <section class="filter-section">
+            <div class="filter-group">
+                <label>🔍 Search:</label>
+                <input type="text" id="live-search" placeholder="Type subject...">
+            </div>
+            <div class="filter-group">
+                <label>📅 From:</label>
+                <input type="date" id="filter-start" onchange="filterByDate()">
+            </div>
+            <div class="filter-group">
+                <label>📅 To:</label>
+                <input type="date" id="filter-end" onchange="filterByDate()">
+            </div>
+        </section>
+
+        <main>
+            <div id="loading-spinner" class="hidden">Loading...</div>
+            <table id="session-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Subject</th>
+                        <th>Duration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="session-list">
+                    </tbody>
+            </table>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

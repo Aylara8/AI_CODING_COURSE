@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aylar | Developer Portfolio</title>
+    <style>
+        /* Global Styles & Variables */
+        :root {
+            --bg-color: #020617; /* Deeper dark blue */
+            --card-bg: rgba(30, 41, 59, 0.7); /* Translucent for glass effect */
+            --accent-color: #38bdf8; 
+            --secondary-accent: #818cf8; /* Purple-blue for gradients */
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --spacing: 32px;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Elements */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #020617 100%);
+            z-index: -1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.2rem 0;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(12px);
+            text-align: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        /* Hero Header */
+        header {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+        }
+
+        /* Section Layout */
+        section {
+            padding: 120px 10%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        /* Skills Tags */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill-tag {
+            background: var(--card-bg);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.2);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            transition: all 0.4s ease;
+        }
+
+        .project-card:hover {
+            transform: scale(1.03);
+            border-color: var(--accent-color);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .project-card h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+
+        /* Contact Form */
+        .contact-container {
+            background: var(--card-bg);
+            padding: 50px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            background: rgba(2, 6, 23, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 10px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--accent-color);
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-accent));
+            color: white;
+            border: none;
+            padding: 15px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            section { padding: 80px 5%; }
+            nav a { margin: 0 8px; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <header id="home">
+        <div class="hero-text">
+            <h1>Aylar.</h1>
+            <p>DESIGNER // DEVELOPER</p>
+        </div>
+    </header>
+
+    <section id="about">
+        <h2>About Me</h2>
+        <p>I am a student developer passionate about creating clean, functional web applications. I enjoy the logic of programming combined with the visual satisfaction of design.</p>
+        <p>Currently, I'm focused on mastering frontend technologies and learning how to build responsive layouts that work for everyone.</p>
+    </section>
+
+    <section id="skills">
+        <h2>Tech Stack</h2>
+        <div class="skills-container">
+            <div class="skill-tag">HTML5</div>
+            <div class="skill-tag">CSS3</div>
+            <div class="skill-tag">VS Code</div>
+            <div class="skill-tag">Python</div>
+            <div class="skill-tag">GitHub</div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2>Featured Work</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3>Decision Maker</h3>
+                <p>A Python-based study method selector using <strong>if-elif logic</strong>. It suggests techniques based on subject and learning style, providing direct links to resources.</p>
+            </div>
+            <div class="project-card">
+                <h3>Quiz Game</h3>
+                <p>An interactive Python application that features real-time scoring and dynamic feedback for an engaging user experience.</p>
+            </div>
+            <div class="project-card">
+                <h3>Society Guide</h3>
+                <p>A minimalist blog template built with semantic HTML5 and custom CSS layouts, prioritizing mobile-first readability.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact-container">
+            <h2 style="margin-top: 0; text-align: center;">Let's Connect</h2>
+            <form action="#">
+                <input type="text" placeholder="Name" required>
+                <input type="email" placeholder="Email" required>
+                <textarea rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 AYLAR | BUILT WITH CODE & CAFFEINE</p>
+    </footer>
+
+</body>
+</html>

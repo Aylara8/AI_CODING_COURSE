@@ -1,0 +1,14 @@
+[
+    {
+        "id": 2,
+        "subject": "Math",
+        "duration": 30,
+        "date": "2026-02-19"
+    },
+    {
+        "id": 2,
+        "subject": "Programming",
+        "duration": 120,
+        "date": "2026-02-19"
+    }
+]

@@ -1,0 +1,54 @@
+[
+    {
+        "text": "buy milk, done 1",
+        "done": false
+    },
+    {
+        "text": "buy book, done 3",
+        "done": false
+    },
+    {
+        "text": "chores, done 5",
+        "done": false
+    },
+    {
+        "text": "make sure to get homework done 1",
+        "done": false
+    },
+    {
+        "text": "make sure to do your homework, done True",
+        "done": false
+    },
+    {
+        "text": "make sure to do your hw, done 1",
+        "done": false
+    },
+    {
+        "text": "hw, done 3, del 5",
+        "done": false
+    },
+    {
+        "text": "make sure hw, done 1",
+        "done": false
+    },
+    {
+        "text": "hw, done 2, del 2, qiut",
+        "done": false
+    },
+    {
+        "text": "hw, done 1,",
+        "done": false
+    },
+    {
+        "text": "hw, done 22,",
+        "done": false
+    },
+    {
+        "text": "hw, done 1,",
+        "done": false
+    },
+    {
+        "text": "fs, done 2",
+        "done": false
+    }
+]

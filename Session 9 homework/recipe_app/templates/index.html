@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Keeper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>🍳 Recipe Keeper</h1>
+        <p>Total Recipes: <strong>{{ count }}</strong></p>
+    </header>
+
+    <main class="container">
+        <section class="form-section">
+            <h2>Add New Recipe</h2>
+            <form action="/add" method="POST">
+                <input type="text" name="name" placeholder="Recipe Name" required>
+                <textarea name="ingredients" placeholder="Ingredients (one per line)" required></textarea>
+                <textarea name="instructions" placeholder="Instructions" required></textarea>
+                <button type="submit" class="btn-add">Save Recipe</button>
+            </form>
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <p class="error">{{ messages[0] }}</p>
+              {% endif %}
+            {% endwith %}
+        </section>
+
+        <section class="display-section">
+            <form action="/" method="GET" class="search-bar">
+                <input type="text" name="search" placeholder="Search recipes..." value="{{ query }}">
+                <button type="submit">Filter</button>
+                <a href="/" class="btn-clear">Clear</a>
+            </form>
+
+            <div class="recipe-grid">
+                {% for recipe in recipes %}
+                <div class="recipe-card">
+                    <h3>{{ recipe.name }}</h3>
+                    <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
+                    <p><strong>Steps:</strong> {{ recipe.instructions }}</p>
+                    <a href="{{ url_for('delete_recipe', index=loop.index0) }}" class="btn-delete">Delete</a>
+                </div>
+                {% endfor %}
+                
+                {% if not recipes %}
+                <p class="empty-msg">No recipes found. Start cooking!</p>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

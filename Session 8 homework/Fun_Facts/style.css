@@ -1,0 +1,84 @@
+:root {
+    --primary: #6c5ce7;
+    --bg-grad: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+    --glass: rgba(255, 255, 255, 0.85);
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg-grad);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+h1 { color: white; margin-bottom: 10px; font-size: 2.5rem; }
+
+#counter-badge {
+    display: inline-block;
+    background: rgba(0,0,0,0.2);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+}
+
+/* FACT CARD DESIGN */
+.fact {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-left: 8px solid #dfe6e9;
+    
+    /* Animation start state */
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Animation end state */
+.fact.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* DYNAMIC STYLES */
+.low-count { border-left-color: #74b9ff; }
+.mid-count { border-left-color: #ffeaa7; }
+.high-count { border-left-color: #55efc4; }
+
+/* BUTTONS */
+.btn-primary {
+    background: white;
+    color: var(--primary);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-primary:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 12px 25px;
+    border-radius: 12px;
+    margin-left: 10px;
+    cursor: pointer;
+}

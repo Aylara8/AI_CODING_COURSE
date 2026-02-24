@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 8: Interactive Websites with JavaScript</title>
+    <style>
+        /* --- CSS Variables (Shared System) --- */
+        :root {
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
+            
+            --bg-color: #000000;
+            --card-bg: #1c1c1e;
+            
+            /* Standard Accents */
+            --accent: #0a84ff;         /* Blue */
+            --accent-purple: #bf5af2;  /* Purple */
+            --accent-green: #30d158;   /* Success */
+            --accent-red: #ff453a;     /* Error/Important */
+            
+            /* Session Specific Colors */
+            --js-yellow: #f7df1e;      /* JavaScript Brand Color */
+            --js-text: #323330;        /* Text color often used on JS yellow */
+            --py-blue: #3776ab;        /* Python Brand Color (for comparison) */
+
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
+        }
+
+        /* --- Base Setup --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            overflow: hidden;
+        }
+
+        /* --- Snap Container --- */
+        .presentation-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10vw;
+            border-bottom: 1px solid #1a1a1a;
+            position: relative;
+        }
+
+        /* --- Typography --- */
+        .content-wrapper {
+            max-width: 1200px; /* Slightly wider for side-by-side code */
+            width: 100%;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+            background: linear-gradient(120deg, #fff, #86868b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 { font-size: 3rem; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+        h3 { font-size: 1.5rem; color: var(--text-main); margin-bottom: 0.5rem; }
+
+        p {
+            font-size: 1.6rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            max-width: 55ch;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(247, 223, 30, 0.2); /* JS Yellow tint */
+            color: var(--js-yellow);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Layout Components --- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s;
+        }
+
+        /* --- Code Styling --- */
+        pre.code-block {
+            background: #111;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            color: #d4d4d4;
+            border: 1px solid #333;
+            overflow-x: auto;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* Syntax Highlighting */
+        .kwd { color: #c678dd; } /* Keyword */
+        .str { color: #98c379; } /* String */
+        .func { color: #61afef; } /* Function */
+        .num { color: #d19a66; } /* Number */
+        .comment { color: #5c6370; font-style: italic; }
+        .js-kwd { color: var(--js-yellow); }
+
+        /* Compare Box (Python vs JS) */
+        .compare-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .compare-header {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        /* --- Prompt Box --- */
+        .prompt-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--js-yellow);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 0 12px 12px 0;
+        }
+        .prompt-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--js-yellow);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .prompt-text {
+            font-family: var(--font-main);
+            font-size: 1.3rem;
+            color: #fff;
+            font-style: italic;
+        }
+
+        /* --- Console Mockup --- */
+        .console-mockup {
+            background: #242424;
+            border-top: 1px solid #333;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            border-radius: 0 0 12px 12px;
+        }
+        .console-line { margin-bottom: 0.5rem; display: flex; gap: 0.5rem; }
+        .console-arrow { color: #888; }
+        .console-out { color: #e1e1e1; }
+        .console-return { color: #98c379; font-style: italic; }
+        .console-error { color: #ff453a; background: rgba(255, 69, 58, 0.1); width: 100%; }
+
+        /* --- Animations --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .scroll-hint { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 0.9rem; color: var(--text-muted); opacity: 0.5; }
+        
+        .highlight-js { color: var(--js-yellow); }
+    </style>
+</head>
+<body>
+
+<div class="presentation-container">
+
+    <!-- SLIDE 1: Title -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag">Session 8 • Phase 2</span>
+            <h1>Interactive Websites<br>with JavaScript</h1>
+            <p>Making webpages come alive. Moving from "Static" to "Dynamic".</p>
+            <div class="scroll-hint">Scroll to begin ↓</div>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: The Three Layers -->
+    <section>
+        <div class="content-wrapper">
+            <h2>The Three Layers</h2>
+            <p>A website is like a human body.</p>
+
+            <div class="grid-3">
+                <div class="card" style="opacity: 0.6;">
+                    <h3 style="color: #e34c26;">HTML</h3>
+                    <p style="font-weight: bold; margin-bottom: 0.5rem;">The Bones</p>
+                    <p style="font-size: 1rem; color: var(--text-muted);">Structure & Content.</p>
+                </div>
+                <div class="card" style="opacity: 0.6;">
+                    <h3 style="color: #2965f1;">CSS</h3>
+                    <p style="font-weight: bold; margin-bottom: 0.5rem;">The Skin</p>
+                    <p style="font-size: 1rem; color: var(--text-muted);">Presentation & Style.</p>
+                </div>
+                <div class="card" style="border: 2px solid var(--js-yellow); background: rgba(247, 223, 30, 0.05);">
+                    <h3 style="color: var(--js-yellow);">JavaScript</h3>
+                    <p style="font-weight: bold; margin-bottom: 0.5rem;">The Muscles</p>
+                    <p style="font-size: 1rem; color: var(--text-muted);">Behavior & Logic.</p>
+                </div>
+            </div>
+            
+            <div class="prompt-box">
+                <span class="prompt-label">Mental Model</span>
+                <p class="prompt-text">"Python runs on the Server. JavaScript runs in the Browser."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: Python vs JS Translation -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag">Translation Guide</span>
+            <h2>Same Logic, New Syntax</h2>
+            <p>You already know how to code. You just need to learn the new dialect.</p>
+
+            <div class="compare-container">
+                <!-- Python Side -->
+                <div>
+                    <div class="compare-header" style="color: var(--py-blue);">🐍 Python</div>
+                    <pre class="code-block">
+name = <span class="str">"Alice"</span>
+
+<span class="kwd">def</span> <span class="func">greet</span>(name):
+    <span class="kwd">if</span> name == <span class="str">"Alice"</span>:
+        <span class="func">print</span>(<span class="str">"Hi!"</span>)
+    <span class="kwd">else</span>:
+        <span class="func">print</span>(<span class="str">"Who?"</span>)</pre>
+                </div>
+
+                <!-- JS Side -->
+                <div>
+                    <div class="compare-header" style="color: var(--js-yellow);">📜 JavaScript</div>
+                    <pre class="code-block" style="border-color: var(--js-yellow);">
+<span class="js-kwd">let</span> name = <span class="str">"Alice"</span>;
+
+<span class="js-kwd">function</span> <span class="func">greet</span>(name) <span class="highlight-js">{</span>
+    <span class="js-kwd">if</span> (name === <span class="str">"Alice"</span>) <span class="highlight-js">{</span>
+        console.log(<span class="str">"Hi!"</span>);
+    <span class="highlight-js">}</span> <span class="js-kwd">else</span> <span class="highlight-js">{</span>
+        console.log(<span class="str">"Who?"</span>);
+    <span class="highlight-js">}</span>
+<span class="highlight-js">}</span></pre>
+                </div>
+            </div>
+            <p style="font-size: 1rem; margin-top: 1rem; color: var(--text-muted);">Notice: Curly braces <code>{}</code> replace indentation. Variables need <code>let</code>.</p>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: The DOM -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag">The Magic Connection</span>
+            <h2>The DOM</h2>
+            <p>Document Object Model. This is how JavaScript grabs HTML elements to change them.</p>
+
+            <div class="grid-2">
+                <div>
+                    <pre class="code-block">
+<span class="comment">// 1. Select the element</span>
+<span class="js-kwd">let</span> title = document.<span class="func">getElementById</span>(<span class="str">'myTitle'</span>);
+
+<span class="comment">// 2. Change the text</span>
+title.textContent = <span class="str">"Hello World!"</span>;
+
+<span class="comment">// 3. Change the style</span>
+title.style.color = <span class="str">"blue"</span>;</pre>
+                </div>
+                <div class="card">
+                    <h3>💡 AI Prompt Tip</h3>
+                    <p style="font-size:1.1rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Don't memorize every command. Ask AI to bridge the gap.
+                    </p>
+                    <p class="prompt-text" style="font-size: 1.1rem; border-left: 2px solid var(--accent); padding-left: 1rem;">
+                        "Claude, create JavaScript to change the background color of the 'body' tag when a button is clicked."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 5: Guided Build - Calculator -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag">Guided Build</span>
+            <h2>The Interactive Calculator</h2>
+            <p>We will build a tool that takes input, processes it, and updates the page.</p>
+
+            <div class="card" style="padding: 2.5rem; margin-top: 2rem; border-left: 6px solid var(--js-yellow);">
+                <h3 style="color: var(--js-yellow);">🚀 The Master Prompt</h3>
+                <p class="prompt-text" style="font-size: 1.5rem; margin-top: 1rem;">
+                    "Create a simple calculator webpage with HTML, CSS, and JavaScript. It should have inputs for two numbers, buttons for +, -, *, /, and display the result instantly."
+                </p>
+            </div>
+
+            <div class="grid-3" style="margin-top: 1rem;">
+                <div class="card" style="padding: 1.5rem;">
+                    <strong style="color: var(--accent);">Step 1</strong>
+                    <p style="font-size: 1rem; margin-top: 0.5rem;">Analyze the <code>script</code> tags.</p>
+                </div>
+                <div class="card" style="padding: 1.5rem;">
+                    <strong style="color: var(--accent);">Step 2</strong>
+                    <p style="font-size: 1rem; margin-top: 0.5rem;">Break it with <code>console.log</code>.</p>
+                </div>
+                <div class="card" style="padding: 1.5rem;">
+                    <strong style="color: var(--accent);">Step 3</strong>
+                    <p style="font-size: 1rem; margin-top: 0.5rem;">Add an "Exponent" button.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 6: Debugging & Console -->
+    <section>
+        <div class="content-wrapper">
+            <span class="tag" style="background: rgba(255, 69, 58, 0.2); color: var(--accent-red);">Critical Skill</span>
+            <h2>Console is King</h2>
+            <p>In Python, you see errors in the terminal. In Web Dev, you use the <strong>Browser Console</strong>.</p>
+
+            <div class="card" style="padding: 0; overflow: hidden; border: 1px solid #333;">
+                <div style="background: #333; padding: 0.5rem 1rem; font-size: 0.8rem; color: #ccc;">DevTools > Console</div>
+                <div class="console-mockup">
+                    <div class="console-line">
+                        <span class="console-arrow">></span>
+                        <span class="console-out">2 + 2</span>
+                    </div>
+                    <div class="console-line">
+                        <span class="console-arrow"><</span>
+                        <span class="console-return">4</span>
+                    </div>
+                    <div class="console-line">
+                        <span class="console-arrow">></span>
+                        <span class="console-out">document.getElementById('missing')</span>
+                    </div>
+                    <div class="console-line">
+                        <span class="console-arrow"><</span>
+                        <span class="console-return">null</span>
+                    </div>
+                    <div class="console-line console-error">
+                        <span>⊗ Uncaught TypeError: Cannot read property 'value' of null</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 1.5rem; font-size: 1.1rem; color: var(--text-muted);">
+                Right-click > Inspect > Console tab. This is your first stop when things break.
+            </p>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: Homework -->
+    <section>
+        <div class="content-wrapper">
+            <h2>Homework: Make it Move</h2>
+            <p>Choose your interactive challenge.</p>
+
+            <div class="grid-3">
+                <div class="card">
+                    <span class="tag" style="background: rgba(255,255,255,0.1); color: #fff;">HW 1</span>
+                    <h3>Fun Facts</h3>
+                    <p style="font-size: 1rem; color: var(--text-muted);">A page with a "Reveal" button. Click to show hidden facts about you, one by one.</p>
+                </div>
+                <div class="card">
+                    <span class="tag" style="background: rgba(255,255,255,0.1); color: #fff;">HW 2</span>
+                    <h3>The Component</h3>
+                    <p style="font-size: 1rem; color: var(--text-muted);">Build a Quiz, a To-Do List, or a Color Mixer from scratch.</p>
+                </div>
+                <div class="card" style="opacity: 0.8;">
+                    <span class="tag" style="background: rgba(255,255,255,0.1); color: #fff;">Stretch</span>
+                    <h3>Portfolio 2.0</h3>
+                    <p style="font-size: 1rem; color: var(--text-muted);">Add Dark Mode and Smooth Scroll to your portfolio from Session 7.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 8: Wrap Up -->
+    <section>
+        <div class="content-wrapper">
+            <h2>Next Session: Full Stack</h2>
+            <p class="lead-text">
+                You now know <span style="color: var(--html-orange);">HTML</span>, <span style="color: var(--css-blue);">CSS</span>, and <span style="color: var(--js-yellow);">JavaScript</span>.
+            </p>
+            <p style="margin-top: 1.5rem;">
+                Currently, your website is just running in the browser (Frontend).<br>
+                Next, we connect it to <strong>Python</strong> (Backend).
+            </p>
+            
+            <div class="grid-2" style="margin-top: 3rem;">
+                <div class="card" style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖥️</div>
+                    <strong>Frontend</strong>
+                    <p style="font-size: 0.9rem; margin-top:0.5rem;">Browser</p>
+                </div>
+                <div class="card" style="text-align: center; border: 1px dashed var(--text-muted);">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
+                    <strong>Backend</strong>
+                    <p style="font-size: 0.9rem; margin-top:0.5rem; color: var(--accent);">Session 9: Flask</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+</body>
+</html>

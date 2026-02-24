@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-4 fw-bold text-dark">Welcome to OpenShelf</h1>
+        <p class="fs-5 text-muted">The open-source repository for sharing knowledge and resources.</p>
+        
+        <form action="{{ url_for('index') }}" method="GET" class="d-flex justify-content-center mt-4">
+            <input class="form-control form-control-lg w-50 me-2" type="search" name="q" 
+                   value="{{ query if query else '' }}" placeholder="Search resources..." aria-label="Search">
+            <button class="btn btn-primary btn-lg px-4" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+{% if query %}
+    <div class="container">
+        <h4 class="mb-4">Search results for: <span class="text-primary">"{{ query }}"</span></h4>
+        
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for res in results %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-primary">{{ res.title }}</h5>
+                            <p class="card-text text-muted small">{{ res.description }}</p>
+                            <p class="card-text small"><strong>Uploaded by:</strong> {{ res.uploader.username }}</p>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                            <span class="badge bg-info text-dark">{{ res.filename.split('.')[-1]|upper }}</span>
+                            <a href="{{ url_for('download_file', filename=res.filename) }}" class="btn btn-sm btn-primary">
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">No resources found matching your search.</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-link">Clear search</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

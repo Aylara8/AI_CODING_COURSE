@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Aylar Home</title>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/hobbies">Hobbies</a>
+    </nav>
+
+    <div class="card">
+        <h1>System Initialized.</h1>
+        <p>Hello, world! I am <strong>{{ name }}</strong>.</p>
+        <p>Welcome to my Flask-powered interface.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+:root {
+    --primary: #4a90e2;
+    --danger: #e74c3c;
+    --bg: #f4f7f6;
+    --text: #333;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--bg);
+    padding-bottom: 10px;
+}
+
+.form-section {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr 1fr;
+    gap: 10px;
+    width: 100%;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.btn-primary { background: var(--primary); color: white; border: none; cursor: pointer; border-radius: 6px; }
+.btn-delete { background: var(--danger); color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.hidden { display: none; }
+
+/* Mobile Friendly */
+@media (max-width: 600px) {
+    form { grid-template-columns: 1fr; }
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: #eef2f7;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 5px solid var(--primary);
+}
+
+.stat-card h3 { margin: 0; font-size: 0.9rem; color: #666; }
+.stat-card p { margin: 5px 0; font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+
+.filter-section {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.subject-tag strong {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+
+.btn-delete:hover { transform: scale(1.2); }
