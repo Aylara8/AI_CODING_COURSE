@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card p-3 shadow-sm">
+            <h3>Stats</h3>
+            <p>Total: <strong>{{ stats.total }}</strong></p>
+            <p>Finished: <strong>{{ stats.finished }}</strong></p>
+        </div>
+        
+        <form action="/add" method="POST" class="mt-4 p-3 bg-white border rounded">
+            <h5>Add New Book</h5>
+            <input type="text" name="title" class="form-control mb-2" placeholder="Title" required>
+            <input type="text" name="author" class="form-control mb-2" placeholder="Author" required>
+            <select name="status" class="form-select mb-2">
+                <option>Want to Read</option>
+                <option>Reading</option>
+                <option>Finished</option>
+            </select>
+            <button class="btn btn-primary w-100">Add Book</button>
+        </form>
+    </div>
+
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between mb-3">
+            <h2>Your Library</h2>
+            <div>
+                <a href="/" class="btn btn-sm btn-outline-secondary">All</a>
+                <a href="/?status=Reading" class="btn btn-sm btn-outline-primary">Reading</a>
+                <a href="/?status=Finished" class="btn btn-sm btn-outline-success">Finished</a>
+            </div>
+        </div>
+
+        {% if not books %}
+            <div class="alert alert-info">No books found. Start adding some!</div>
+        {% else %}
+            <div class="list-group">
+                {% for book in books %}
+                <div class="list-group-item d-flex justify-content-between align-items-center" id="book-{{ book.id }}">
+                    <div>
+                        <h5 class="mb-0">{{ book.title }}</h5>
+                        <small class="text-muted">by {{ book.author }} | <strong>{{ book.status }}</strong></small>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="deleteBook('{{ book.id }}')">Delete</button>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
